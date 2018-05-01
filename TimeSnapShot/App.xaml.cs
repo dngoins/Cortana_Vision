@@ -7,6 +7,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Microsoft.EntityFrameworkCore;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -30,6 +31,11 @@ namespace TimeSnapShot
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            using (var context = new PhotoDataContext())
+            {
+                context.Database.EnsureCreated();
+                context.Database.Migrate();
+            }
         }
 
         /// <summary>

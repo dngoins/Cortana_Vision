@@ -3,11 +3,133 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:TimeSnapShot"
+    xmlns:conv="using:TimeSnapShot.Converters"    
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <conv:DateFormatConverter x:Name="DateToStringFormatConverter"/>
+    </Page.Resources>
+    <Grid x:Name="MainGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />           
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Pivot x:Name="rootPivot" Title="Photo Data" Grid.Row="1"  Margin="0,0,10,0" >
+            <PivotItem Header="Action" Margin="12,0,10,3">
+                <Grid x:Name="PhotoDataPane" BorderThickness="1" BorderBrush="Black">
+
+                    <Grid x:Name="PhotoDataGrid" Margin="0,1,1,49">
+                        <Grid.RowDefinitions>                           
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        
+                        
+                        <StackPanel Grid.Row="0" Margin="5">
+                            <Button 
+                    x:Name="Start" 
+                   
+                    Margin="0,12,0,0"                   
+                    Tapped="Play_Tapped" 
+                  
+                    Visibility="{Binding StartControlsVisibility}" VerticalAlignment="Top" Height="52" Width="52" Padding="4,0" VerticalContentAlignment="Top" Background="{x:Null}"  ToolTipService.ToolTip="Start the Photo Op!">
+                                <Image Source="Assets/Go.png" Margin="-6,-2"/>
+                            </Button>
+                            <Button 
+                    x:Name="AnalyzePic" 
+                   
+                    Margin="0,12,0,0"                   
+                    Tapped="Analyze_Tapped" 
+                  
+                    Visibility="{Binding StopControlsVisibility}" VerticalAlignment="Top" Height="52" Width="52" Padding="4,0" VerticalContentAlignment="Top" Background="{x:Null}"  ToolTipService.ToolTip="Analyze the Photo Op!">
+                                Analyze The Pic
+                            </Button>
+
+                            <Button 
+                    x:Name="Stop" 
+                    Grid.Row="0" 
+                    Margin="0,12,0,0"                   
+                    Tapped="Stop_Tapped" 
+                  
+                    Visibility="{Binding StopControlsVisibility}" VerticalAlignment="Top" Height="52" Width="52" Padding="4,0" VerticalContentAlignment="Top" Background="{x:Null}"  ToolTipService.ToolTip="Stop the Photo Op!">
+                                <Image Source="Assets/Emoticon_Dead_Orange.png" Margin="5"/>
+                            </Button>
+
+                            <TextBlock x:Name="PhotoMeta" Margin="5,5,10,5" FontSize="10" Text="Metadata: "  />
+
+                            <StackPanel Orientation="Horizontal" Margin="0,10,10,64" Visibility="{Binding StopControlsVisibility}">
+                               
+                                <Grid x:Name="ColorPreviewBlock" BorderThickness="1" Grid.Column="0">
+                                    <StackPanel>
+                                        <TextBlock Text="Color frame source"/>
+                                        <Image Name="colorPreviewImage" />
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                            <Grid x:Name="ImageGrid">
+                                <Grid.RowDefinitions>                                    
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                    
+                </Grid>
+
+
+            </PivotItem>
+            <PivotItem Header="Historical">
+
+                <StackPanel Name="ScorePane" Background="#FFF5EEEE">
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0" Width="322" Height="57" VerticalAlignment="Center" >
+                        <TextBlock FontSize="20"  Text="Your Latest Images" Margin="1,11,1,11.875" Foreground="#FF0C0C0C" Width="254" TextAlignment="Center"/>
+                        
+                    </StackPanel>
+                    <Button x:Name="ClearHistory" Content="Clear History" Click="ClearHistory_Click" FontSize="20" Background="#33F9F8F8" Foreground="#FF0A0A0A" VerticalAlignment="Bottom" Height="45" HorizontalAlignment="Stretch" Margin="93,0,124,0" FontWeight="Bold" BorderBrush="#FF0A0A0A"/>
+
+                    <ListView ItemsSource="{Binding AllItems}" Margin="5,10,5,0" x:Name="PhotoDataList" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" >
+                        <ListView.Resources>
+
+
+                        </ListView.Resources>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="White" BorderThickness="2" CornerRadius="10" Padding="5" Margin="5,5,5,0">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock FontSize="10" Text="Photo Data" Margin="0,0,10,0" />
+                                            <TextBlock FontSize="10" Text="{Binding Metadata}" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock FontSize="10" Text="When it Happened:" Margin="0,0,5,0" />
+                                            <TextBlock FontSize="10" Text="{Binding TimeOccurred, Converter={StaticResource DateToStringFormatConverter}}" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock FontSize="10" Text="Image" Margin="0,0,5,0" />
+                                            <TextBlock FontSize="10" Text="{Binding Image}" Margin="0,0,5,0" />
+
+                                        </StackPanel>
+
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                </StackPanel>
+
+            </PivotItem>
+        </Pivot>
 
     </Grid>
+
 </Page>
